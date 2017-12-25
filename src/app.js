@@ -34,8 +34,6 @@ const createStore = (reducer) => {
             })
         }
     }
-
-
     return {
         getState,
         subscribe,
