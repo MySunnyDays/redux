@@ -1,4 +1,6 @@
-// import {createStore} from 'redux';
+import {createStore} from 'redux';
+import React, {Component} from 'react';
+import ReactDOM from 'react-dom';
 const counter = (state=0, action) => {
     switch(action.type){
         case 'increase':
@@ -10,61 +12,35 @@ const counter = (state=0, action) => {
     }
 }
 
-const createStore = (reducer) => {
-    let state;
-    let list = [];
-    const getState = () => {
-        return state;
-    }
-    const dispatch = (action) => {
-        state = reducer(state, action);
-        list.forEach((fn) => {
-            fn();
-        })//执行list中的所有回掉函数。
-    }
-    const subscribe = (fn) =>  {
-        list.push(fn);
-        return () => {
-            list = list.filter((cb) => {
-                return cb != fn;
-                if( cd == fn){
-                    return false;
-                }
-                return true;
-            })
-        }
-    }
-    return {
-        getState,
-        subscribe,
-        dispatch
-    }
-}
+
 
 
 
 
 const store = createStore(counter);
 
-store.dispatch({
-    type:'INIT',
-})//系统会首先执行初始化action。
-
-
-
-const render = () => {
-    document.getElementsByTagName('body')[0].innerHTML = '<h1>'+store.getState()+'</h1>';
+class Counter extends Component {
+    render() {
+        return (
+            <div>
+                <h1>{store.getState()}</h1>
+                <button>-</button>
+                <button>+</button>                
+            </div>
+        )
+    }
 }
 
-const unsubscribe = store.subscribe(render);//监听事件，一旦state发生改变，就会自动执行函数
+const render = () => {
+    ReactDom.render(
+        <Counter  />,
+        document.getElementById('root');
+    )
+    // document.getElementsByTagName('body')[0].innerHTML = '<h1>'+store.getState()+'</h1>';
+}
 
 render();
 
-document.addEventListener('click', () => {
-    store.dispatch({
-        type: 'increase',
-    })
-    unsubscribe();
-})
+const unsubscribe = store.subscribe(render);//监听事件，一旦state发生改变，就会自动执行函数
 
 
